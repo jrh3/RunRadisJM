@@ -1,4 +1,5 @@
-﻿# RunRadisJM
+﻿
+# RunRadisJM
 
 [RunRadis]: https://github.com/adamfocht/runradis "RunRadis"
 [Stock Investor Pro]: https://www.aaii.com/stock-investor-pro "Stock Investor Pro"
@@ -9,11 +10,7 @@ whereas the [RunRadis][] database (DB) stores all fields within a single record,
 stores each field in a separate memory mapped file.  As such, it is an order of magnitude
 faster than [RunRadis][].
 
-## Documentation
-
-Still under construction...
-
-### Installation
+## Installation
 
 The steps to install RunRadisJM are:
 
@@ -62,7 +59,7 @@ The steps to install RunRadisJM are:
 6. Create a screen definition using *RadisScript* syntax and then back-test it using *bt*.
 
 
-### Programs
+## Programs
 
 The "programs" are all java classes, found in the *radis* package.  The following are the
 "programs" that may be executed:
@@ -83,7 +80,7 @@ where *ClassPath* is the path to the directory containing the compiled class fil
 the path to a jar file containing the compiled class files, and *XXX* is one of the
 above "programs".
 
-#### bt
+### bt
 
 Back-tests a screen.
 
@@ -125,7 +122,7 @@ Example:
 		MAX DD= -14.2
 		
 		
-#### dbdel
+### dbdel
 
 Deletes one or more periods from the DB.  The argument is the oldest period to be deleted;
 all periods from then until the most recent will be deleted.
@@ -141,7 +138,7 @@ Example:
 			20230127
 		Are you sure? (y/n)
 
-#### dbinit
+### dbinit
 
 Initializes/creates the DB.
 
@@ -161,7 +158,7 @@ Example:
 		company.dat  fieldef.dat  period.dat
 		$
 
-#### dblist
+### dblist
 
 Lists the periods contained within the DB.
 
@@ -180,7 +177,7 @@ Example:
 		Ok
 		$
 
-#### dbload
+### dbload
 
 Loads the DB with the current data stored within *Stock Investor Pro*.  For the most
 part, the loader only loads fields that are numeric or boolean/logical.  The only text
@@ -213,7 +210,7 @@ Example:
 		Ok
 		$
 
-#### fields
+### fields
 
 Lists the names of all of the fields contained within the DB.  All field names are listed
 in lower case.
@@ -235,7 +232,7 @@ Example:
 		...
 		$
 		
-#### screens
+### screens
 
 Lists the screens contained within a screen definition file.
 
@@ -306,6 +303,23 @@ correspondence with the records in *radisid.map*, with the entries for each peri
 back to back.  The path and file name of each file is derived from the file name and the short
 field name, as they appear within the *Stock Investor Pro* installation's data dictionary.
 
+### si_prices.txt
+
+A "csv" file containing price corrections, sorted in ascending order by date.  Prices from
+this file override prices extracted from *Stock Investor Pro*, and each line has the following
+format:
+
+		YYYYMMDD,Ticker,Price
+
+Example:
+
+		20040430,RDI,7.21
+		20040430,VSNT,2.08
+		20040903,BBBB,18.93
+		20040903,FCH,11.96
+		20040903,LECO,31.25
+		20040903,QLTY,6.779
+
 
 ## Code Considerations
 
@@ -317,22 +331,17 @@ The list of text fields to be loaded is specified via the *textField* variable, 
 ### Filtering
 
 The loader, *dbload*, performs filtering.  The evaluation code takes advantage of the
-pre-filtering done by the loader and evaluates them to constant expressions if they appear
+pre-filtering done by the loader and evaluates them to constant expressions, if they appear
 within the screen definition.  As such, if the filter in the loader is changed, then the
-corresponding evaluation code must also be changed.  The loader filters out the following
-companies:
+corresponding evaluation code must also be changed.  The loader filters out companies
+as specified in the table below:
 
-+ OTC stocks
-+ ADR/ADS stocks.  The corresponding evaluation code can be found in ExecContext.getData()
-+ tickers that are more than four characters long
-+ tickers that contain non-alphabetic characters
-+ company names that contain any of the following text items:
-	+ LLC
-	+ Partners
-	+ Trust
-	+ Holding
-	+ L.P.
-	+ LP
+| Description | Filter Class | Evaluation Class |
+|--------------|-----------|-------|
+| OTC stocks | CompanyDbf | Expression.eval() case tok.NEQ |
+| ADR/ADS stocks  | CompanyDbf | ExecContext.getData() case "si adr/ads stock" |
+| tickers that are more than four characters long or contain non-alphabetic characters | CompanyDbf | Expression.match() switch (regex) |
+| company names that contain any of the following text items: LLC, Partners, Trust, Holding, L.P., LP | CompanyDbf | Expression.match() switch (regex) |
 
 
 ## Contributing
