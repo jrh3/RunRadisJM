@@ -303,6 +303,23 @@ correspondence with the records in *radisid.map*, with the entries for each peri
 back to back.  The path and file name of each file is derived from the file name and the short
 field name, as they appear within the *Stock Investor Pro* installation's data dictionary.
 
+### si_prices.txt
+
+A "csv" file containing price corrections, sorted in ascending order by date.  Prices from
+this file override prices extracted from *Stock Investor Pro*, and each line has the following
+format:
+
+		YYYYMMDD,Ticker,Price
+
+Example:
+
+		20040430,RDI,7.21
+		20040430,VSNT,2.08
+		20040903,BBBB,18.93
+		20040903,FCH,11.96
+		20040903,LECO,31.25
+		20040903,QLTY,6.779
+
 
 ## Code Considerations
 
@@ -314,22 +331,17 @@ The list of text fields to be loaded is specified via the *textField* variable, 
 ### Filtering
 
 The loader, *dbload*, performs filtering.  The evaluation code takes advantage of the
-pre-filtering done by the loader and evaluates them to constant expressions if they appear
+pre-filtering done by the loader and evaluates them to constant expressions, if they appear
 within the screen definition.  As such, if the filter in the loader is changed, then the
-corresponding evaluation code must also be changed.  The loader filters out the following
-companies:
+corresponding evaluation code must also be changed.  The loader filters out companies
+as specified in the table below:
 
-+ OTC stocks
-+ ADR/ADS stocks.  The corresponding evaluation code can be found in ExecContext.getData()
-+ tickers that are more than four characters long
-+ tickers that contain non-alphabetic characters
-+ company names that contain any of the following text items:
-	+ LLC
-	+ Partners
-	+ Trust
-	+ Holding
-	+ L.P.
-	+ LP
+| Description | Filter Class | Evaluation Class |
+|--------------|-----------|-------|
+| OTC stocks | CompanyDbf | Expression.eval() case tok.NEQ |
+| ADR/ADS stocks  | CompanyDbf | ExecContext.getData() case "si adr/ads stock" |
+| tickers that are more than four characters long or contain non-alphabetic characters | CompanyDbf | Expression.match() switch (regex) |
+| company names that contain any of the following text items: LLC, Partners, Trust, Holding, L.P., LP | CompanyDbf | Expression.match() switch (regex) |
 
 
 ## Contributing

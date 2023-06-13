@@ -21,6 +21,8 @@
 package radis.interp;
 
 import java.util.function.BiFunction;
+import static radis.dbf.CompanyDbf.TKR_RE;
+import static radis.dbf.CompanyDbf.NAME_RE;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -335,11 +337,10 @@ public class Expression {
 		 * files, thus we can assume the result is already determined.
 		 */
 		switch (regex) {
-
-		case "^[A-Z][A-Z]?[A-Z]?[A-Z]?$":
+		case TKR_RE:
 			return new NumConstData(exec, 1);
 
-		case "L[.]?P[.]?|LLC|Partners|Trust|Holding":
+		case NAME_RE:
 			return new NumConstData(exec, 0);
 		}
 

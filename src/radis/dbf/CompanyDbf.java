@@ -27,8 +27,11 @@ import java.util.regex.Pattern;
  * DBF file containing company data.
  */
 public class CompanyDbf extends Dbf {
-	private static final Pattern TKR_PAT = Pattern.compile("^[A-Z]{1,4}$");
-	private static final Pattern NAME_PAT = Pattern.compile("L[.]?P[.]?|LLC|Partners|Trust|Holding");
+	public static final String TKR_RE = "^[A-Z]{1,4}$";
+	public static final String NAME_RE = "L[.]?P[.]?|LLC|Partners|Trust|Holding";
+
+	private static final Pattern TKR_PAT = Pattern.compile(TKR_RE);
+	private static final Pattern NAME_PAT = Pattern.compile(NAME_RE);
 
 	private final FieldDescriptor fticker;
 	private final FieldDescriptor fcompid; // company id
