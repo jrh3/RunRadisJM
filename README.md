@@ -10,6 +10,10 @@ whereas the [RunRadis][] database (DB) stores all fields within a single record,
 stores each field in a separate memory mapped file.  As such, it is an order of magnitude
 faster than [RunRadis][].
 
+This has been tested on a Linux platform, though it has not been tested on a Windows platform.
+Nevertheless, it has been tested via Wine HQ, and since Java is very portable, it *should* run
+on Windows, as well.
+
 ## Installation
 
 The steps to install RunRadisJM are:
@@ -56,7 +60,9 @@ The steps to install RunRadisJM are:
    
 5. Create an *si_prices.txt* file in the $MMAP directory.
    
-6. Create a screen definition using *RadisScript* syntax and then back-test it using *bt*.
+6. Create a screen definition using
+   [RadisScript](http://www.datahelper.com/mi/search.phtml?nofool=youBet&mid=16923940)
+   syntax and then back-test it using *bt*.
 
 
 ## Programs
@@ -120,7 +126,34 @@ Example:
 		20110930	  -6.2	  -0.4	  -0.6	4
 		
 		MAX DD= -14.2
-		
+
+#### Considerations
+
++ Field and variable names are case-insensitive.  For example, "SI Ticker" and "si ticker"
+  both refer to the same field.
+  
++ Supports the *match()* function, which returns the index of the first occurrence of the
+  matching text.  For example:
+  
+			Keep :MATCH([SI Ticker], "^[A-Z]{1,4}$") > 0
+			
++ Supports a "print" statement.  Example:
+
+			Print [SI Ticker], " ", [SI Price]
+
++ Supports the following fields: "rank", "tied rank", and "% tied rank".
+
++ Supports the following functions: *average*, *median*.  In addition, it supports: *min* and
+  *max*, though they only accept two arguments.  Also supports: *sign* and *abs*.
+  Example:
+
+			Create [medpr]: median([SI Price M001], [SI Price M002], [SI Price M003])
+
++ Supports the following aggregate functions: *count*, *sum*, *average*, *median*, *max*.  Example:
+
+			Set [avg]: average([[SI Gross Margin 12m]])
+
++ Does *not* support "Add" or "SOS" statements.
 		
 ### dbdel
 
@@ -165,6 +198,7 @@ Lists the periods contained within the DB.
 Example:
 
 		$ java -cp bin radis.dblist
+		...
 		20110128
 		20110225
 		20110325
@@ -174,6 +208,7 @@ Example:
 		20110729
 		20110826
 		20110930
+		...
 		Ok
 		$
 
@@ -251,8 +286,8 @@ Example:
 ## RunRadisJM Database Layout
 
 All numeric data is stored in binary, using the "little-endian" byte order.  In addition,
-dates are stored as *floats*, representing the number of days since the start of the
-epoch (i.e., 1/1/1970). Integers do not appear within the memory map files; they only
+*date* fields are stored as *floats*, representing the number of days since the start of
+the epoch (i.e., 1/1/1970). Integers do not appear within the memory map files; they only
 appear in *radisid.map* and some of the \*.dat files.
 
 | Type         | Record size (in bytes) | Invalid/Unknown | Notes |
@@ -296,13 +331,6 @@ begins within each of the memory map files.
 Contains information about each field stored within the DB.  The file contains a vector of
 fixed length data structures (see [FieldDef.java](src/radis/datadef/FieldDef.java)).
 
-### *.map (memory map file)
-
-Each memory map file contains the data for a single field.  Records are arranged in one-to-one
-correspondence with the records in *radisid.map*, with the entries for each period appearing
-back to back.  The path and file name of each file is derived from the file name and the short
-field name, as they appear within the *Stock Investor Pro* installation's data dictionary.
-
 ### si_prices.txt
 
 A "csv" file containing price corrections, sorted in ascending order by date.  Prices from
@@ -320,13 +348,27 @@ Example:
 		20040903,LECO,31.25
 		20040903,QLTY,6.779
 
+### *.map (memory map file)
+
+Each memory map file contains the data for a single field.  Records are arranged in one-to-one
+correspondence with the records in *radisid.map*, with the entries for each period appearing
+back to back.  The path and file name of each file is derived from the file name and the short
+field name, as they appear within the *Stock Investor Pro* installation's data dictionary.
 
 ## Code Considerations
 
 ### Text Fields
 
 The list of text fields to be loaded is specified via the *textField* variable, found in
-[DdLoader.java](src/radis/dbf/DdLoader.java).
+[DdLoader.java](src/radis/dbf/DdLoader.java).  This currently contains the following:
+
++ si ticker
++ si exchange
++ si company name
++ si country
++ si standard and poor stock
+
+All other text fields are ignored.
 
 ### Filtering
 
