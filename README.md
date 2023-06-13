@@ -1,4 +1,5 @@
-﻿# RunRadisJM
+﻿
+# RunRadisJM
 
 [RunRadis]: https://github.com/adamfocht/runradis "RunRadis"
 [Stock Investor Pro]: https://www.aaii.com/stock-investor-pro "Stock Investor Pro"
@@ -9,11 +10,7 @@ whereas the [RunRadis][] database (DB) stores all fields within a single record,
 stores each field in a separate memory mapped file.  As such, it is an order of magnitude
 faster than [RunRadis][].
 
-## Documentation
-
-Still under construction...
-
-### Installation
+## Installation
 
 The steps to install RunRadisJM are:
 
@@ -62,7 +59,7 @@ The steps to install RunRadisJM are:
 6. Create a screen definition using *RadisScript* syntax and then back-test it using *bt*.
 
 
-### Programs
+## Programs
 
 The "programs" are all java classes, found in the *radis* package.  The following are the
 "programs" that may be executed:
@@ -83,7 +80,7 @@ where *ClassPath* is the path to the directory containing the compiled class fil
 the path to a jar file containing the compiled class files, and *XXX* is one of the
 above "programs".
 
-#### bt
+### bt
 
 Back-tests a screen.
 
@@ -125,7 +122,7 @@ Example:
 		MAX DD= -14.2
 		
 		
-#### dbdel
+### dbdel
 
 Deletes one or more periods from the DB.  The argument is the oldest period to be deleted;
 all periods from then until the most recent will be deleted.
@@ -141,7 +138,7 @@ Example:
 			20230127
 		Are you sure? (y/n)
 
-#### dbinit
+### dbinit
 
 Initializes/creates the DB.
 
@@ -161,7 +158,7 @@ Example:
 		company.dat  fieldef.dat  period.dat
 		$
 
-#### dblist
+### dblist
 
 Lists the periods contained within the DB.
 
@@ -180,7 +177,7 @@ Example:
 		Ok
 		$
 
-#### dbload
+### dbload
 
 Loads the DB with the current data stored within *Stock Investor Pro*.  For the most
 part, the loader only loads fields that are numeric or boolean/logical.  The only text
@@ -213,7 +210,7 @@ Example:
 		Ok
 		$
 
-#### fields
+### fields
 
 Lists the names of all of the fields contained within the DB.  All field names are listed
 in lower case.
@@ -235,7 +232,7 @@ Example:
 		...
 		$
 		
-#### screens
+### screens
 
 Lists the screens contained within a screen definition file.
 
