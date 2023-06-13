@@ -326,7 +326,15 @@ Example:
 ### Text Fields
 
 The list of text fields to be loaded is specified via the *textField* variable, found in
-[DdLoader.java](src/radis/dbf/DdLoader.java).
+[DdLoader.java](src/radis/dbf/DdLoader.java).  This currently contains the following:
+
++ si ticker
++ si exchange
++ si company name
++ si country
++ si standard and poor stock
+
+All other text fields are ignored.
 
 ### Filtering
 
