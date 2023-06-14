@@ -60,10 +60,29 @@ public class Context {
 		this.dir = dir;
 
 		// read the period definitions that have been previously loaded
-		var fper = new StructFile<Period>(dir + Period.FILE_NAME);
-		periods = fper.read(Period.RECSZ, buf -> new Period(buf));
+		periods = readPeriods();
 
 		// read the field definitions that have been previously loaded
+		readFieldDefs();
+	}
+
+	/**
+	 * Reads the periods from the radis DB
+	 *
+	 * @return list of periods that were read
+	 * @throws IOException
+	 */
+	protected List<Period> readPeriods() throws IOException {
+		var fper = new StructFile<Period>(dir + Period.FILE_NAME);
+		return fper.read(Period.RECSZ, buf -> new Period(buf));
+	}
+
+	/**
+	 * Reads the field definitions from the radis DB.
+	 *
+	 * @throws IOException
+	 */
+	protected void readFieldDefs() throws IOException {
 		var fdef = new StructFile<FieldDef>(dir + FieldDef.FILE_NAME);
 		for (FieldDef def : fdef.read(FieldDef.RECSZ, buf -> new FieldDef(buf))) {
 			long2def.put(def.getLongName(), def);
