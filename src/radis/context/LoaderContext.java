@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import radis.Util;
 import radis.data.DataLoader;
 import radis.data.loader.BoolLoader;
 import radis.data.loader.DateLoader;
@@ -88,13 +89,6 @@ public class LoaderContext extends Context {
 	 */
 	protected List<SiProIdent> readCompanies() throws IOException {
 		return new StructFile<SiProIdent>(getDir() + SiProIdent.FILE_NAME).read(SiProIdent.RECSZ, SiProIdent::new);
-	}
-
-	/**
-	 * @return {@code true} if printing is enabled
-	 */
-	protected boolean isPrintingEnabled() {
-		return true;
 	}
 
 	/**
@@ -189,7 +183,7 @@ public class LoaderContext extends Context {
 
 		// new field - add it
 
-		if (isPrintingEnabled()) {
+		if (Util.printLoaderInfo) {
 			System.out.println("add field " + longnm + ": " + fullnm);
 		}
 

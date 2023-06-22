@@ -78,6 +78,12 @@ public final class Util {
 	public static final String NOW_VAR_NM = varName("SI Weekly Data Date");
 
 	/**
+	 * {@code True}, if informational messages should be printed while loading data
+	 * from the SI Pro installation.
+	 */
+	public static boolean printLoaderInfo = true;
+
+	/**
 	 * Prevents the object from being constructed.
 	 */
 	private Util() {

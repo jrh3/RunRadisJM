@@ -31,12 +31,6 @@ public class DirectLoaderContext extends LoaderContext {
 	}
 
 	@Override
-	protected boolean isPrintingEnabled() {
-		// printing is disabled
-		return false;
-	}
-
-	@Override
 	public void save() throws IOException {
 		// don't save anything to the DB
 	}

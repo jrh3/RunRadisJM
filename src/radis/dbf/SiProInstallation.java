@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import radis.Util;
 import radis.context.LoaderContext;
 import radis.data.buffer.RadisIdData;
 import radis.datadef.SiProIdent;
@@ -130,9 +131,7 @@ public class SiProInstallation {
 
 		String sdate = dbf.getField(fd);
 
-		if (isPrintingEnabled()) {
-			System.out.println("date=" + sdate);
-		}
+		System.out.println("date=" + sdate);
 
 		var fdate = Date.fromText(sdate);
 		if (Date.isInvalid(fdate)) {
@@ -140,13 +139,6 @@ public class SiProInstallation {
 		}
 
 		return fdate;
-	}
-
-	/**
-	 * @return {@code true} if printing is enabled
-	 */
-	protected boolean isPrintingEnabled() {
-		return true;
 	}
 
 	/**
@@ -577,7 +569,7 @@ public class SiProInstallation {
 
 				String path = dirName + "/" + name;
 
-				if (isPrintingEnabled()) {
+				if (Util.printLoaderInfo) {
 					System.out.println(path + ":");
 				}
 

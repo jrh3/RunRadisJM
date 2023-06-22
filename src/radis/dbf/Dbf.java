@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import radis.Util;
 import radis.exception.CorruptDbException;
 import radis.exception.FieldNotFoundException;
 
@@ -85,12 +86,16 @@ public class Dbf {
 		buf.get();
 		this.header = new DbfHeader(buf);
 
-		System.out.println("numrecs=" + header.getNumRecords());
+		if (Util.printLoaderInfo) {
+			System.out.println("numrecs=" + header.getNumRecords());
+		}
 
 		readFields(header.getHeaderLen());
 		indexFields();
 
-		System.out.println("numfields=" + name2field.size());
+		if (Util.printLoaderInfo) {
+			System.out.println("numfields=" + name2field.size());
+		}
 
 		if (!fields.isEmpty()) {
 			var fd = fields.get(fields.size() - 1);

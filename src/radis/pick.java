@@ -114,6 +114,7 @@ public class pick {
 		}
 
 		try {
+			Util.printLoaderInfo = false;
 			new pick().display();
 
 		} catch (Exception e) {
