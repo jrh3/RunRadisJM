@@ -1,6 +1,6 @@
 /*
 	RunRadisJM: Run RadiScript screens
-	Copyright (C) 2009-2023  James Hahn
+	Copyright (C) 2023  James Hahn
 
 	This file is part of RunRadisJM.
 
@@ -127,10 +127,11 @@ public class pick {
 	 * Displays the tickers passing the screen, in the last sort order.
 	 */
 	public void display() {
+		int[] recOrder = exec.recOrder;
 		int nrecs = 0;
 		int endrec = period.endRecord();
 		for (int x = period.beginRecord(); x < endrec; ++x) {
-			int recnum = exec.recOrder[x];
+			int recnum = recOrder[x];
 
 			if (retain[recnum]) {
 				++nrecs;
