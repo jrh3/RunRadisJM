@@ -546,9 +546,9 @@ public class SiProInstallation {
 				Dbf dbf = new Dbf(path);
 
 				AtomicReference<FieldDescriptor> refkey = new AtomicReference<>();
-				FieldDescriptor fkey = refkey.get();
 
 				Map<String, List<Integer>> key2recs = selectKey(dbf, filenm, refkey);
+				FieldDescriptor fkey = refkey.get();
 
 				// load each field this file contains
 				for (var longnm : longNames) {
