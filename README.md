@@ -132,6 +132,8 @@ Example:
 
 #### Considerations
 
++ Does *not* support "Add" or "SOS" statements.
+
 + Field and variable names are case-insensitive.  For example, "SI Ticker" and "si ticker"
   both refer to the same field.
   
@@ -155,8 +157,9 @@ Example:
 + Supports the following aggregate functions: *count*, *sum*, *average*, *median*, *max*.  Example:
 
 			Set [avg]: average([[SI Gross Margin 12m]])
-
-+ Does *not* support "Add" or "SOS" statements.
+			
++ In general, it is not necessary to *deblank* a field, as any field referenced by a
+  screen will automatically be "deblanked".
 		
 ### dbdel
 
