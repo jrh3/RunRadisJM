@@ -26,8 +26,8 @@ import radis.context.ExecContext;
 
 /**
  * Buffer containing TEXT data, backed by a StringBuffer. This is used when
- * accessing a data that is <i>not</i> contained within an mmap file; i.e., it's
- * a temporary value.
+ * accessing data that is <i>not</i> contained within an mmap file; i.e., it's a
+ * temporary value.
  */
 public class StringBufData extends TextBufData {
 	private final StringBuffer buf;

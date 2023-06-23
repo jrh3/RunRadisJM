@@ -46,9 +46,9 @@ public interface Buffered extends Data {
 
 	/*
 	 * These methods convert the data in "this" buffer to data of the appropriate
-	 * type. If the this buffer is already of the appropriate type, then it just
-	 * returns itself. Otherwise, a new buffer, of the appropriate type, is
-	 * constructed and then populated by converting each record of "this" buffer.
+	 * type. If this buffer is already of the appropriate type, then it just returns
+	 * itself. Otherwise, a new buffer, of the appropriate type, is constructed and
+	 * then populated by converting each record of "this" buffer.
 	 */
 
 	NumBufData toNum();
