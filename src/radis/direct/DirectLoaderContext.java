@@ -57,7 +57,7 @@ public class DirectLoaderContext extends LoaderContext {
 
 	/**
 	 * Uses lazy loading, simply recording the parameters so the field's data can be
-	 * retrieved when {@link #getFieldData(String)} is later called.
+	 * retrieved when {@link #getFieldData(String)} is called later.
 	 */
 	@Override
 	public ByteBuffer loadFieldData(String longnm, Dbf dbf, FieldDescriptor compdef, FieldDescriptor def,

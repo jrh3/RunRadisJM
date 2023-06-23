@@ -28,7 +28,8 @@ import radis.data.buffer.RadisIdData;
 import radis.datadef.FieldDef;
 
 /**
- * Execution context that gets its data directly from the DB.
+ * Execution context that gets its data directly from the SI Pro installation
+ * rather than the radis DB.
  */
 public class DirectExecContext extends ExecContext {
 
