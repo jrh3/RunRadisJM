@@ -166,8 +166,8 @@ public class LoaderContext extends Context {
 					System.out.println("rename field " + nopct + " TO " + longnm);
 					validateUnchanged(info, def);
 
+					// don't set the record size - it must remain constant
 					def.setType(info.getType());
-					def.setRecSize(info.getRecSize());
 					def.setLongName(longnm);
 					def.setShortName(info.getShortName());
 					def.setFileName(fullnm);
