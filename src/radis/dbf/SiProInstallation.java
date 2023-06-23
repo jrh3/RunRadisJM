@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import radis.Util;
 import radis.context.LoaderContext;
 import radis.data.buffer.RadisIdData;
 import radis.datadef.SiProIdent;
@@ -129,6 +130,7 @@ public class SiProInstallation {
 		}
 
 		String sdate = dbf.getField(fd);
+
 		System.out.println("date=" + sdate);
 
 		var fdate = Date.fromText(sdate);
@@ -458,7 +460,7 @@ public class SiProInstallation {
 	 * @param sipro2radis mapping from SI Pro company ID to radis company ID
 	 * @throws IOException
 	 */
-	private void saveRadisIds(LoaderContext ctx, Map<String, Integer> sipro2radis) throws IOException {
+	protected void saveRadisIds(LoaderContext ctx, Map<String, Integer> sipro2radis) throws IOException {
 
 		var begrec = ctx.numRecords();
 		var maxrecs = begrec + compid2recnum.size();
@@ -480,13 +482,24 @@ public class SiProInstallation {
 			ibuf.put(recnum, sipro2radis.get(compid));
 		}
 
+		saveRadisIdBuf(ctx, buf);
+	}
+
+	/**
+	 * Saves a buffer to the radis ID file.
+	 *
+	 * @param ctx
+	 * @param buf buffer whose content is to be saved
+	 * @throws IOException
+	 */
+	private void saveRadisIdBuf(LoaderContext ctx, ByteBuffer buf) throws IOException {
 		buf.rewind();
 
 		try (var file = FileChannel.open(Path.of(ctx.getDir() + RadisIdData.FILENM), StandardOpenOption.READ,
 				StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
 
 			// append the buffer to the end of the file
-			file.position(begrec * RadisIdData.RECSZ);
+			file.position(ctx.numRecords() * RadisIdData.RECSZ);
 			file.write(buf);
 		}
 	}
@@ -555,7 +568,10 @@ public class SiProInstallation {
 				List<String> longNames = file2long.get(filenm);
 
 				String path = dirName + "/" + name;
-				System.out.println(path + ":");
+
+				if (Util.printLoaderInfo) {
+					System.out.println(path + ":");
+				}
 
 				Dbf dbf = new Dbf(path);
 

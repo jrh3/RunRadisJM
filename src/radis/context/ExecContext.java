@@ -21,6 +21,7 @@
 package radis.context;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
@@ -47,7 +48,7 @@ import radis.exception.InternalException;
  * Execution context used while executing a screen.
  */
 public class ExecContext {
-	private final Context ctx;
+	protected final Context ctx;
 	private final RadisIdData radisIds;
 
 	/**
@@ -121,7 +122,7 @@ public class ExecContext {
 	 * @return the mapping of internal company IDs
 	 * @throws IOException
 	 */
-	private RadisIdData loadRadisIds() throws IOException {
+	protected RadisIdData loadRadisIds() throws IOException {
 		String filenm = ctx.getDir() + RadisIdData.FILENM;
 		int recsz = RadisIdData.RECSZ;
 
@@ -188,6 +189,34 @@ public class ExecContext {
 			return null;
 		}
 
+		var mmap = getDataMap(def);
+
+		switch (def.getType()) {
+		case FLOAT:
+			return new NumBufData(this, mmap.asFloatBuffer());
+
+		case DATE:
+			return new DateBufData(this, mmap.asFloatBuffer());
+
+		case TEXT:
+			return new TextByteBufData(this, mmap, def.recSize());
+
+		case LOGICAL:
+			return new BoolBufData(this, mmap);
+
+		default:
+			throw new InternalException("invalid type for " + longnm + ": " + def.getType());
+		}
+	}
+
+	/**
+	 * Gets a field's data from its memory mapped file.
+	 *
+	 * @param def field whose data is to be retrieved
+	 * @return a buffer containing the memory mapped file data
+	 * @throws IOException
+	 */
+	protected ByteBuffer getDataMap(FieldDef def) throws IOException {
 		String filenm = ctx.getDir() + "/" + def.getFileName();
 		int recsz = def.recSize();
 
@@ -195,22 +224,7 @@ public class ExecContext {
 			var mmap = file.map(FileChannel.MapMode.READ_ONLY, 0, maxRecNum * recsz);
 			mmap.order(ByteOrder.LITTLE_ENDIAN);
 
-			switch (def.getType()) {
-			case FLOAT:
-				return new NumBufData(this, mmap.asFloatBuffer());
-
-			case DATE:
-				return new DateBufData(this, mmap.asFloatBuffer());
-
-			case TEXT:
-				return new TextByteBufData(this, mmap, recsz);
-
-			case LOGICAL:
-				return new BoolBufData(this, mmap);
-
-			default:
-				throw new InternalException("invalid type for " + longnm + ": " + def.getType());
-			}
+			return mmap;
 		}
 	}
 

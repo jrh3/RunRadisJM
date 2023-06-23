@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import radis.Util;
 import radis.data.DataLoader;
 import radis.data.loader.BoolLoader;
 import radis.data.loader.DateLoader;
@@ -72,12 +73,22 @@ public class LoaderContext extends Context {
 		super(dir);
 
 		// load the companies from the radis DB
-		companies = new StructFile<SiProIdent>(getDir() + SiProIdent.FILE_NAME).read(SiProIdent.RECSZ, SiProIdent::new);
+		companies = readCompanies();
 
 		// populate file2def from long2def
 		for (var def : long2def.values()) {
 			file2def.put(def.getFileName(), def);
 		}
+	}
+
+	/**
+	 * Reads the companies from the radis DB.
+	 *
+	 * @return the list of companies
+	 * @throws IOException
+	 */
+	protected List<SiProIdent> readCompanies() throws IOException {
+		return new StructFile<SiProIdent>(getDir() + SiProIdent.FILE_NAME).read(SiProIdent.RECSZ, SiProIdent::new);
 	}
 
 	/**
@@ -171,7 +182,10 @@ public class LoaderContext extends Context {
 		}
 
 		// new field - add it
-		System.out.println("add field " + longnm + ": " + fullnm);
+
+		if (Util.printLoaderInfo) {
+			System.out.println("add field " + longnm + ": " + fullnm);
+		}
 
 		def = new FieldDef(info, fullnm);
 
@@ -264,9 +278,10 @@ public class LoaderContext extends Context {
 	 *                     the DBF record
 	 * @param sipro2recnum map from the SI Pro company ID to the relevant mmap
 	 *                     record numbers, relative to {@link #beginRecord()}
+	 * @return a buffer containing the newly loaded field data
 	 * @throws IOException
 	 */
-	public void loadFieldData(String longnm, Dbf dbf, FieldDescriptor compdef, FieldDescriptor def,
+	public ByteBuffer loadFieldData(String longnm, Dbf dbf, FieldDescriptor compdef, FieldDescriptor def,
 			Map<String, List<Integer>> sipro2recnum) throws IOException {
 
 		FieldDef pdef = getFieldDef(longnm);
@@ -304,6 +319,22 @@ public class LoaderContext extends Context {
 		// load the data into the buffer
 		loader.loadFieldData(dbf, compdef, def, begrec, begrec + maxrecs, sipro2recnum);
 
+		// now save it to the radis DB
+		saveFieldData(filenm, recsz, begrec, buf);
+
+		return buf;
+	}
+
+	/**
+	 * Saves a buffer, containing field data for the new period, to the radis DB.
+	 *
+	 * @param filenm name of the file into which to save the buffer
+	 * @param recsz  record size
+	 * @param begrec record number where the new period's data begins
+	 * @param buf    buffer containing the data to be saved
+	 * @throws IOException
+	 */
+	protected void saveFieldData(String filenm, int recsz, int begrec, ByteBuffer buf) throws IOException {
 		buf.rewind();
 
 		var path = Path.of(filenm);

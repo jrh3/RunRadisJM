@@ -23,7 +23,8 @@ The steps to install RunRadisJM are:
    
 2. Set the environment variables, MMAP and SI_PRO.
 
-	+ **MMAP**: path to the RunRadisJM DB (i.e., the memory-map data files)
+	+ **MMAP**: path to the RunRadisJM DB (i.e., the memory-map data files).  Note: this is not
+	  needed by *pick*
 	+ **SI_PRO**: path to the *Stock Investor Pro* installation.  This is the directory containing the
 	  "Professional" subdirectory.  Note: this is only needed by *dbload*
 
@@ -76,6 +77,8 @@ The "programs" are all java classes, found in the *radis* package.  The followin
 + **dblist**: lists the periods contained within the DB
 + **dbload**: loads the DB with the current data stored within *Stock Investor Pro*   
 + **fields**: lists the names of all of the fields contained within the DB
++ **pick**: lists the tickers that pass the screen, when applied to the current
+   *Stock Investor Pro* installation
 + **screens**: lists the screens contained within a screen definition file
 
 Each of the above may be run via:
@@ -266,6 +269,39 @@ Example:
 		si yield-average y3
 		...
 		$
+
+### pick
+
+Lists the stock picks, i.e., those passing the screen when applied to the current
+*Stock Investor Pro* installation.
+
+		$ java -cp bin radis.pick -?
+		arg(s): [-<option> <value>]* [<screen-definition-file>]+
+		where the options are as follows:
+			-min	  min stocks to hold, rest in cash
+			-max	  max stocks to hold
+			-screen	  screen-name
+
+Example:
+
+		$ java -cp bin radis.pick -min 10 -max 10 t/basic t/screens
+		date=20230526
+		DXPE
+		SCPL
+		MDU
+		JACK
+		AMWD
+		GMS
+		MHO
+		MLI
+		CCS
+		BZH
+
+#### Considerations
+
+This program uses the current *Stock Investor Pro* installation, directly;
+it does not use the RunRadisJM DB.  Consequently, it is not necessary to
+load the RunRadisJM DB prior to running it.
 		
 ### screens
 
