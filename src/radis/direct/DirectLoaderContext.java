@@ -80,11 +80,7 @@ public class DirectLoaderContext extends LoaderContext {
 			return null;
 		}
 
-		if (data.buffer == null) {
-			data.buffer = super.loadFieldData(longnm, data.dbf, data.compdef, data.def, data.sipro2recnum);
-		}
-
-		return data.buffer;
+		return super.loadFieldData(longnm, data.dbf, data.compdef, data.def, data.sipro2recnum);
 	}
 
 	@Override
@@ -108,7 +104,6 @@ public class DirectLoaderContext extends LoaderContext {
 		private final FieldDescriptor compdef;
 		private final FieldDescriptor def;
 		private final Map<String, List<Integer>> sipro2recnum;
-		private ByteBuffer buffer;
 
 		public Data(Dbf dbf, FieldDescriptor compdef, FieldDescriptor def, Map<String, List<Integer>> sipro2recnum) {
 			this.dbf = dbf;
