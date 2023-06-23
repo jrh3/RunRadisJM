@@ -38,6 +38,7 @@ public class DirectExecContext extends ExecContext {
 
 	@Override
 	protected RadisIdData loadRadisIds() throws IOException {
+		// not needed - just return null
 		return null;
 	}
 

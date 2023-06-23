@@ -69,6 +69,10 @@ public class LoaderContext extends Context {
 	 */
 	private final Map<String, FieldDef> file2def = new HashMap<>();
 
+	/**
+	 * @param dir
+	 * @throws IOException
+	 */
 	public LoaderContext(String dir) throws IOException {
 		super(dir);
 
@@ -99,7 +103,7 @@ public class LoaderContext extends Context {
 	}
 
 	/**
-	 * Saves the load context data to the radis DB.
+	 * Saves the loaded context data to the radis DB.
 	 * <p/>
 	 * Note: this should be invoked AFTER records have been added to all of the
 	 * files containing the contents of the different fields.
