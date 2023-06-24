@@ -40,8 +40,8 @@ import radis.dbf.FieldDescriptor;
 public class DirectLoaderContext extends LoaderContext {
 	private Map<String, Data> long2data = new HashMap<>();
 
-	public DirectLoaderContext(String dir) throws IOException {
-		super(dir);
+	public DirectLoaderContext() throws IOException {
+		super(null);
 	}
 
 	@Override
