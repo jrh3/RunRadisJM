@@ -497,7 +497,7 @@ public class SiProInstallation {
 		buf.rewind();
 
 		try (var file = FileChannel.open(Path.of(ctx.getDir() + RadisIdData.FILENM), StandardOpenOption.READ,
-				StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
+				StandardOpenOption.WRITE)) {
 
 			// append the buffer to the end of the file
 			file.position(ctx.numRecords() * RadisIdData.RECSZ);
