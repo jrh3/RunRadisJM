@@ -425,9 +425,17 @@ Still under construction...
 
 ## Revision History
 
-1.0 Initial release
++ 1.1.01
 
-1.1 Added "pick" program
+  Fixed a bug that occurs if a text field in a new period has a *smaller* record
+  size than what is currently in the RunRadisJM DB.
 
-1.1.01 Fixed a bug that occurs if a text field in a new period has a *smaller* record
-       size than what is currently in the RunRadisJM DB
+  Modified *dbinit* to truncate the *radisid.map* file.
+
++ 1.1
+
+  Added the "pick" program
+
++ 1.0
+
+  Initial release
