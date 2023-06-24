@@ -86,7 +86,7 @@ public class OpItem {
 	 * type.
 	 *
 	 * @throws IllegalArgumentException if the item cannot provide a value of the
-	 *                                  given type
+	 *                                  desired type
 	 * @return a value of the appropriate type
 	 */
 	public boolean boolval() {

@@ -40,14 +40,6 @@ public class StrToken extends OpItem {
 		value = val;
 	}
 
-	/**
-	 * Returns the value stored within the item, provided it's of the appropriate
-	 * type.
-	 *
-	 * @throws IllegalArgumentException if the item cannot provide a value of the
-	 *                                  given type
-	 * @return a value of the appropriate type
-	 */
 	@Override
 	public String strval() {
 		return value;
