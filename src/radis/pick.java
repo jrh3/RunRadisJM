@@ -55,7 +55,7 @@ public class pick {
 	 * @throws IOException
 	 */
 	public pick() throws IOException {
-		this.ctx = new DirectLoaderContext("");
+		this.ctx = new DirectLoaderContext();
 		this.parser = new Parser();
 
 		parser.parseAll(Args.files);

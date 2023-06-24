@@ -34,7 +34,7 @@ import radis.parser.tok;
 import radis.types.Num;
 
 /**
- * Evaluator for expressions that may contain a non-aggregate functions of
+ * Evaluator for expressions that may contain non-aggregate functions of
  * variables.
  */
 public class VarExpr extends Expression {

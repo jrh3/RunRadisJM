@@ -40,8 +40,8 @@ import radis.dbf.FieldDescriptor;
 public class DirectLoaderContext extends LoaderContext {
 	private Map<String, Data> long2data = new HashMap<>();
 
-	public DirectLoaderContext(String dir) throws IOException {
-		super(dir);
+	public DirectLoaderContext() throws IOException {
+		super(null);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class DirectLoaderContext extends LoaderContext {
 
 	/**
 	 * Uses lazy loading, simply recording the parameters so the field's data can be
-	 * retrieved when {@link #getFieldData(String)} is later called.
+	 * retrieved when {@link #getFieldData(String)} is called later.
 	 */
 	@Override
 	public ByteBuffer loadFieldData(String longnm, Dbf dbf, FieldDescriptor compdef, FieldDescriptor def,
@@ -80,11 +80,7 @@ public class DirectLoaderContext extends LoaderContext {
 			return null;
 		}
 
-		if (data.buffer == null) {
-			data.buffer = super.loadFieldData(longnm, data.dbf, data.compdef, data.def, data.sipro2recnum);
-		}
-
-		return data.buffer;
+		return super.loadFieldData(longnm, data.dbf, data.compdef, data.def, data.sipro2recnum);
 	}
 
 	@Override
@@ -108,7 +104,6 @@ public class DirectLoaderContext extends LoaderContext {
 		private final FieldDescriptor compdef;
 		private final FieldDescriptor def;
 		private final Map<String, List<Integer>> sipro2recnum;
-		private ByteBuffer buffer;
 
 		public Data(Dbf dbf, FieldDescriptor compdef, FieldDescriptor def, Map<String, List<Integer>> sipro2recnum) {
 			this.dbf = dbf;

@@ -249,6 +249,7 @@ public class DdLoader {
 			break;
 
 		default:
+			// FLOAT or DATE
 			info.setRecSize(4);
 			return true;
 		}

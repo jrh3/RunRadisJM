@@ -158,8 +158,10 @@ Example:
 
 			Set [avg]: average([[SI Gross Margin 12m]])
 			
-+ In general, it is not necessary to *deblank* a field, as any field referenced by a
-  screen will automatically be "deblanked".
++ In general, it is not necessary to *Deblank* a non-text field, as any non-text field
+  referenced by a screen will automatically be "deblanked".
+  
++ The *Uses* statement has no effect and can be left out.
 		
 ### dbdel
 
@@ -420,3 +422,20 @@ as specified in the table below:
 ## Contributing
 
 Still under construction...
+
+## Revision History
+
++ 1.1.01
+
+  Fixed a bug that occurs if a text field in a new period has a *smaller* record
+  size than what is currently in the RunRadisJM DB.
+
+  Modified *dbinit* to truncate the *radisid.map* file.
+
++ 1.1
+
+  Added the "pick" program
+
++ 1.0
+
+  Initial release

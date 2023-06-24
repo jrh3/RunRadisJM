@@ -164,24 +164,6 @@ public class SiProInstallation {
 	}
 
 	/**
-	 * Reverses the data definition map.
-	 *
-	 * @param long2dd maps a long field name to its data definition
-	 * @return a map from the name of an SI Pro DBF file to all of the fields that
-	 *         it contains
-	 */
-	private Map<String, List<String>> reverseMap(Map<String, DdField> long2dd) {
-
-		Map<String, List<String>> file2long = new HashMap<>();
-
-		for (var ent : long2dd.entrySet()) {
-			file2long.computeIfAbsent(ent.getValue().getFileName(), key -> new ArrayList<>()).add(ent.getKey());
-		}
-
-		return file2long;
-	}
-
-	/**
 	 * Loads the data definition of each field from the SI Pro data dictionary.
 	 *
 	 * @param ctx
@@ -211,6 +193,24 @@ public class SiProInstallation {
 		}
 
 		return long2dd;
+	}
+
+	/**
+	 * Reverses the data definition map.
+	 *
+	 * @param long2dd maps a long field name to its data definition
+	 * @return a map from the name of an SI Pro DBF file to all of the fields that
+	 *         it contains
+	 */
+	private Map<String, List<String>> reverseMap(Map<String, DdField> long2dd) {
+
+		Map<String, List<String>> file2long = new HashMap<>();
+
+		for (var ent : long2dd.entrySet()) {
+			file2long.computeIfAbsent(ent.getValue().getFileName(), key -> new ArrayList<>()).add(ent.getKey());
+		}
+
+		return file2long;
 	}
 
 	/**
@@ -408,7 +408,8 @@ public class SiProInstallation {
 	 *
 	 * @param dbf
 	 * @param key2recs
-	 * @param getKey
+	 * @param getKey   function to get the key field (e.g., industry code) from the
+	 *                 company record
 	 */
 	private void buildMap(CompanyDbf dbf, Map<String, List<Integer>> key2recs, Function<CompanyDbf, String> getKey) {
 
@@ -496,42 +497,11 @@ public class SiProInstallation {
 		buf.rewind();
 
 		try (var file = FileChannel.open(Path.of(ctx.getDir() + RadisIdData.FILENM), StandardOpenOption.READ,
-				StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
+				StandardOpenOption.WRITE)) {
 
 			// append the buffer to the end of the file
 			file.position(ctx.numRecords() * RadisIdData.RECSZ);
 			file.write(buf);
-		}
-	}
-
-	/**
-	 * Selects the key to use to map an SI Pro record to a relative mmap record.
-	 *
-	 * @param dbf    SI Pro DBF file
-	 * @param filenm name of the DBF file
-	 * @param fkey   populated with the field descriptor for extracting the key from
-	 *               the SI Pro record
-	 * @return a mapping from a key's value to the list of relevant mmap records
-	 */
-	private Map<String, List<Integer>> selectKey(Dbf dbf, String filenm, AtomicReference<FieldDescriptor> fkey) {
-
-		if (DdLoader.IND_FILENM.equals(filenm)) {
-			fkey.set(dbf.getField(INDUSTRY_CODE));
-			return ind2recs;
-
-		} else if (DdLoader.SEC_FILENM.equals(filenm)) {
-			fkey.set(dbf.getField(SECTOR_CODE));
-			return sec2recs;
-
-		} else {
-			// regular file (i.e., neither industry nor sector)
-
-			if (!dbf.hasField(DdLoader.COMPANY_ID)) {
-				throw new CorruptDbException("table is missing company id field: " + filenm);
-			}
-
-			fkey.set(dbf.getField(DdLoader.COMPANY_ID));
-			return compid2recs;
 		}
 	}
 
@@ -575,19 +545,52 @@ public class SiProInstallation {
 
 				Dbf dbf = new Dbf(path);
 
-				AtomicReference<FieldDescriptor> fkey = new AtomicReference<>();
-				Map<String, List<Integer>> key2recs = selectKey(dbf, filenm, fkey);
+				AtomicReference<FieldDescriptor> refkey = new AtomicReference<>();
+
+				Map<String, List<Integer>> key2recs = selectKey(dbf, filenm, refkey);
+				FieldDescriptor fkey = refkey.get();
 
 				// load each field this file contains
 				for (var longnm : longNames) {
 					var dd = long2dd.get(longnm);
 
-					loadField(ctx, dbf, longnm, dd.getShortName(), fkey.get(), key2recs);
+					loadField(ctx, dbf, longnm, dd.getShortName(), fkey, key2recs);
 
 					// indicate that it has been processed, as it may appear in more than one file
 					long2dd.remove(longnm);
 				}
 			}
+		}
+	}
+
+	/**
+	 * Selects the key to use to map an SI Pro record to a relative mmap record.
+	 *
+	 * @param dbf    SI Pro DBF file
+	 * @param filenm name of the DBF file
+	 * @param fkey   populated with the field descriptor for extracting the key from
+	 *               the SI Pro record
+	 * @return a mapping from a key's value to the list of relevant mmap records
+	 */
+	private Map<String, List<Integer>> selectKey(Dbf dbf, String filenm, AtomicReference<FieldDescriptor> fkey) {
+
+		if (DdLoader.IND_FILENM.equals(filenm)) {
+			fkey.set(dbf.getField(INDUSTRY_CODE));
+			return ind2recs;
+
+		} else if (DdLoader.SEC_FILENM.equals(filenm)) {
+			fkey.set(dbf.getField(SECTOR_CODE));
+			return sec2recs;
+
+		} else {
+			// regular file (i.e., neither industry nor sector)
+
+			if (!dbf.hasField(DdLoader.COMPANY_ID)) {
+				throw new CorruptDbException("table is missing company id field: " + filenm);
+			}
+
+			fkey.set(dbf.getField(DdLoader.COMPANY_ID));
+			return compid2recs;
 		}
 	}
 
@@ -612,6 +615,18 @@ public class SiProInstallation {
 	}
 
 	/**
+	 * Finds a file of the given name within the SI Pro installation, in a
+	 * case-insensitive manner.
+	 *
+	 * @param desiredName
+	 * @return actual name of the file, as found in the directory
+	 * @throws IOException
+	 */
+	public String findFileName(String desiredName) throws IOException {
+		return findFileName(installDir, desiredName);
+	}
+
+	/**
 	 * Finds a file, of the desired name, within the specified directory, in a
 	 * case-insensitive manner.
 	 *
@@ -633,17 +648,5 @@ public class SiProInstallation {
 
 			throw new FileNotFoundException(dirName + "/" + desiredName);
 		}
-	}
-
-	/**
-	 * Finds a file of the given name within the SI Pro installation, in a
-	 * case-insensitive manner.
-	 *
-	 * @param desiredName
-	 * @return actual name of the file, as found in the directory
-	 * @throws IOException
-	 */
-	public String findFileName(String desiredName) throws IOException {
-		return findFileName(installDir, desiredName);
 	}
 }

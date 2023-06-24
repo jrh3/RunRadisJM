@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import radis.data.buffer.RadisIdData;
 import radis.datadef.FieldDef;
 import radis.datadef.Period;
 import radis.datadef.SiProIdent;
@@ -60,9 +61,14 @@ public class dbinit {
 
 		Files.createDirectories(Path.of(dir));
 
+		var radisIdPath = Path.of(dir + RadisIdData.FILENM);
+		Files.deleteIfExists(radisIdPath);
+		Files.createFile(radisIdPath);
+
 		new StructFile<Period>(dir + Period.FILE_NAME).write(Period.RECSZ, List.of(), Period::write);
 		new StructFile<FieldDef>(dir + FieldDef.FILE_NAME).write(FieldDef.RECSZ, List.of(), FieldDef::write);
 		new StructFile<SiProIdent>(dir + SiProIdent.FILE_NAME).write(SiProIdent.RECSZ, List.of(), SiProIdent::write);
+
 		System.out.println("done");
 	}
 

@@ -21,6 +21,7 @@
 package radis.op;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,67 +38,33 @@ public class Op extends OpItem {
 	protected final List<OpItem> args;
 
 	/**
+	 * Constructs an OpItem.
+	 *
+	 * @param optype
+	 * @param args   the operation's arguments
+	 */
+	public Op(int optype, OpItem... args) {
+		super(optype);
+
+		var lst = Arrays.stream(args).map(this::check).toList();
+
+		// wrap in a new ArrayList to make it modifiable
+		this.args = new ArrayList<>(lst);
+	}
+
+	/**
 	 * Verifies that an OpItem is not "None".
 	 *
 	 * @param p the item that's being manipulated
 	 * @throws InternalException if the item is "None"
 	 * @return p, if it's valid
 	 */
-	OpItem check(OpItem p) throws InternalException {
+	private OpItem check(OpItem p) throws InternalException {
 		if (p == None) {
 			throw new InternalException("adding None to " + type());
 		}
 
 		return p;
-	}
-
-	/**
-	 * Constructors take an OpItem type which is assigned as this Op's type. Other
-	 * args are added to the list of children.
-	 */
-	public Op(int optype) {
-		super(optype);
-		args = new ArrayList<>(0);
-	}
-
-	public Op(int optype, OpItem a1) {
-		super(optype);
-		args = new ArrayList<>(1);
-		args.add(check(a1));
-	}
-
-	public Op(int optype, OpItem a1, OpItem a2) {
-		super(optype);
-		args = new ArrayList<>(2);
-		args.add(check(a1));
-		args.add(check(a2));
-	}
-
-	public Op(int optype, OpItem a1, OpItem a2, OpItem a3) {
-		super(optype);
-		args = new ArrayList<>(3);
-		args.add(check(a1));
-		args.add(check(a2));
-		args.add(check(a3));
-	}
-
-	public Op(int optype, OpItem a1, OpItem a2, OpItem a3, OpItem a4) {
-		super(optype);
-		args = new ArrayList<>(4);
-		args.add(check(a1));
-		args.add(check(a2));
-		args.add(check(a3));
-		args.add(check(a4));
-	}
-
-	public Op(int optype, OpItem a1, OpItem a2, OpItem a3, OpItem a4, OpItem a5) {
-		super(optype);
-		args = new ArrayList<>(5);
-		args.add(check(a1));
-		args.add(check(a2));
-		args.add(check(a3));
-		args.add(check(a4));
-		args.add(check(a5));
 	}
 
 	/**

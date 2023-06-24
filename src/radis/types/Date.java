@@ -48,7 +48,7 @@ public class Date {
 	 * @return {@code true} if the value represents an invalid value
 	 */
 	public static boolean isInvalid(float value) {
-		return Float.isNaN(value);
+		return !Float.isFinite(value);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Date {
 	 * @return {@code true} if the value represents a valid value
 	 */
 	public static boolean isValid(float value) {
-		return !Float.isNaN(value);
+		return Float.isFinite(value);
 	}
 
 	/**

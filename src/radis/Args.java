@@ -214,8 +214,7 @@ public class Args {
 	 * @param args     command-line arguments
 	 */
 	public static void parse(String[] args, Spec[] specs, Spec dfltSpec) {
-		LinkedList<String> arglst = new LinkedList<>();
-		Arrays.stream(args).forEach(arglst::add);
+		LinkedList<String> arglst = new LinkedList<>(Arrays.stream(args).toList());
 
 		while (!arglst.isEmpty()) {
 			String nm = arglst.getFirst();

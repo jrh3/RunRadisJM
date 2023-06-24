@@ -31,6 +31,8 @@ import radis.exception.LoaderException;
 public class Text {
 	public static final String INVALID_VALUE = "#VALUE!";
 
+	// TODO should these treat an empty string as invalid?
+
 	/**
 	 * @param text
 	 * @return {@code true} if the text represents an invalid value
