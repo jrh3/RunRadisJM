@@ -61,7 +61,7 @@ public class StrToken extends OpItem {
 
 		} else {
 			StrToken t = (StrToken) p;
-			return (type() == t.type() && value == t.value);
+			return (type() == t.type() && value.equals(t.value));
 		}
 	}
 
