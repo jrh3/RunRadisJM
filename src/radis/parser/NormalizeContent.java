@@ -26,10 +26,10 @@ import java.io.Reader;
 /**
  * Normalizes the content from a Reader as follows:
  * <dl>
- * <li>Everything outside of double quotes is mapped to lower case.
+ * <li>Everything outside of double quotes is mapped to lower case.</li>
  * <li>Extra spaces are stripped from variable names (i.e., between square
- * brackets).
- * <li>Periods are stripped from variable names
+ * brackets).</li>
+ * <li>Periods are stripped from variable names.</li>
  * </dl>
  */
 public class NormalizeContent {
