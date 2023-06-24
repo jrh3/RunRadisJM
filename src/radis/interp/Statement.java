@@ -189,6 +189,7 @@ public class Statement extends ExecContainer {
 		String vstring;
 
 		if (result.isConst()) {
+			// TODO is it necessary to convert a Const to a Buffered?
 			switch (result.getType()) {
 			case tok.NUM:
 				vfloat = result.toConst().toNum();
