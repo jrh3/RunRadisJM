@@ -60,6 +60,8 @@ public class dbinit {
 
 		Files.createDirectories(Path.of(dir));
 
+		// TODO zap the radis-ID file
+
 		new StructFile<Period>(dir + Period.FILE_NAME).write(Period.RECSZ, List.of(), Period::write);
 		new StructFile<FieldDef>(dir + FieldDef.FILE_NAME).write(FieldDef.RECSZ, List.of(), FieldDef::write);
 		new StructFile<SiProIdent>(dir + SiProIdent.FILE_NAME).write(SiProIdent.RECSZ, List.of(), SiProIdent::write);
