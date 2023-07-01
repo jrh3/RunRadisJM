@@ -127,6 +127,8 @@ public class pick {
 	 * Displays the tickers passing the screen, in the last sort order.
 	 */
 	public void display() {
+		System.out.println(Args.screen);
+
 		int[] recOrder = exec.recOrder;
 		int nrecs = 0;
 		int endrec = period.endRecord();
@@ -134,10 +136,15 @@ public class pick {
 			int recnum = recOrder[x];
 
 			if (retain[recnum]) {
-				++nrecs;
-				System.out.println(tickers.get(recnum));
+				if (++nrecs > 1) {
+					System.out.print(' ');
+				}
+
+				System.out.print(tickers.get(recnum));
 			}
 		}
+
+		System.out.println();
 
 		if (nrecs < Args.emin) {
 			System.err.println("*** not enough companies passed the filter");
