@@ -291,6 +291,7 @@ Example:
 
 		$ java -cp bin radis.pick -min 10 -max 10 t/basic t/screens
 		date=20230526
+		3pt_relative_value
 		DXPE
 		SCPL
 		MDU
@@ -314,7 +315,7 @@ Lists the screens contained within a screen definition file.
 
 Example:
 
-		$ java -cp bin radis.screens t/keelix
+		$ java -cp bin radis.screens t/screens
 		optiman
 		blue_skies
 		advanced
