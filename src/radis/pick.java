@@ -134,15 +134,10 @@ public class pick {
 			int recnum = recOrder[x];
 
 			if (retain[recnum]) {
-				if (++nrecs > 1) {
-					System.out.print(' ');
-				}
-
-				System.out.print(tickers.get(recnum));
+				++nrecs;
+				System.out.println(tickers.get(recnum));
 			}
 		}
-
-		System.out.println();
 
 		if (nrecs < Args.emin) {
 			System.err.println("*** not enough companies passed the filter");

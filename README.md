@@ -290,8 +290,17 @@ Lists the stock picks, i.e., those passing the screen when applied to the curren
 Example:
 
 		$ java -cp bin radis.pick -min 10 -max 10 t/basic t/screens
-		date=20230629
-		GMS ARCB PLAB CVLG BZH SNDR BCC HOV BLX MLI
+		date=20230526
+		DXPE
+		SCPL
+		MDU
+		JACK
+		AMWD
+		GMS
+		MHO
+		MLI
+		CCS
+		BZH
 
 #### Considerations
 
