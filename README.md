@@ -291,7 +291,6 @@ Example:
 
 		$ java -cp bin radis.pick -min 10 -max 10 t/basic t/screens
 		date=20230629
-		3pt_relative_value
 		GMS ARCB PLAB CVLG BZH SNDR BCC HOV BLX MLI
 
 #### Considerations
@@ -306,7 +305,7 @@ Lists the screens contained within a screen definition file.
 
 Example:
 
-		$ java -cp bin radis.screens t/screens
+		$ java -cp bin radis.screens t/keelix
 		optiman
 		blue_skies
 		advanced

@@ -127,8 +127,6 @@ public class pick {
 	 * Displays the tickers passing the screen, in the last sort order.
 	 */
 	public void display() {
-		System.out.println(Args.screen);
-
 		int[] recOrder = exec.recOrder;
 		int nrecs = 0;
 		int endrec = period.endRecord();
