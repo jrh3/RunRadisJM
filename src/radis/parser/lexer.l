@@ -25,7 +25,6 @@ Generate via:
 
 package radis.parser;
 
-
 import radis.Util;
 import radis.op.*;
 
@@ -246,6 +245,7 @@ LEFT    { return returnToken(tok.LEFT); }
 RIGHT    { return returnToken(tok.RIGHT); }
 MID    { return returnToken(tok.MID); }
 MATCH    { return returnToken(tok.MATCH); }
+MOD    { return returnToken(tok.MOD); }
 
 End		{
 			yybegin(SKIP2NL);
