@@ -22,11 +22,11 @@
   
 /*
 Generate via:
-	byaccj\yacc -Jclass=tok -Jsemantic=OpItem -Jpackage=radis.compiler parser.y
+	byaccj\yacc -Jclass=tok -Jsemantic=OpItem -Jpackage=radis.parser parser.y
 */
 
 import radis.op.*;
-import radis.InternalException;
+import radis.exception.InternalException;
 %}
 
 %token NONE 1
@@ -36,7 +36,7 @@ import radis.InternalException;
 %token PAD ADDNOPAD TO SCORE AVERAGE MEDIAN SUM COUNT LPAREN RPAREN
 %token AGGAVERAGE AGGMEDIAN AGGMAX
 %token OR AND IF COMMA
-%token MIN MAX NOW NOW_VAR SIGN ABS LENGTH LEFT RIGHT MID
+%token MIN MAX NOW NOW_VAR SIGN ABS LENGTH LEFT RIGHT MID MOD
 %token MATCH ADDSCREEN PADLIST ZTRUE ZFALSE CONCAT
 %token SUB MULT
 %token BOOL DATE STR NUM ANY
@@ -168,6 +168,7 @@ expr:
 	|	expr TIMES expr						{ $$ = new Op(MULT,$1,$3); }
 	|	expr DIV expr						{ $$ = new Op(DIV,$1,$3); }
 	|	expr POW expr						{ $$ = new Op(POW,$1,$3); }
+	|	MOD LPAREN expr COMMA expr RPAREN	{ $$ = new Op(MOD,$3,$5); }
 	|	MINUS expr %prec NEG				{ $$ = new Op(NEG,$2); }
 	|	VAR									{ $$ = $1; }
 	|	STRCON								{ $$ = $1; }

@@ -106,6 +106,9 @@ public class Expression {
 		case tok.DIV:
 			return numBinary(op, (vleft, vright) -> vleft / vright);
 
+		case tok.MOD:
+			return numBinary(op, (vleft, vright) -> vleft % vright);
+
 		case tok.OR:
 			return boolBinary(op, Bool::boolOr);
 
