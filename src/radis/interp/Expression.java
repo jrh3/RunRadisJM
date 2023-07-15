@@ -107,7 +107,7 @@ public class Expression {
 			return numBinary(op, (vleft, vright) -> vleft / vright);
 
 		case tok.MOD:
-			return numBinary(op, (vleft, vright) -> vleft % vright);
+			return numBinary(op, (vleft, vright) -> Float.valueOf(vleft.longValue() % vright.longValue()));
 
 		case tok.OR:
 			return boolBinary(op, Bool::boolOr);
