@@ -19,7 +19,9 @@ on Windows, as well.
 The steps to install RunRadisJM are:
 
 1. Download and compile the java code.  It was compiled using java 17, though it will
-   probably compile with java 11, as well.
+   probably compile with java 11, as well.  The code can be compiled via:   
+
+			$ javac -d bin @sources.txt
    
 2. Set the environment variables, MMAP and SI_PRO.
 
