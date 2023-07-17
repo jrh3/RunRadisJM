@@ -1,0 +1,7 @@
+
+Release 1.1.2	07/17/2023
+- Added "MOD()" function
+- Added instructions for compiling
+
+Release 1.1.1	06/2023
+- Added "radis.pick", which lists tickers currently passing a screen
