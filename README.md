@@ -28,7 +28,7 @@ The steps to install RunRadisJM are:
 	+ **MMAP**: path to the RunRadisJM DB (i.e., the memory-map data files).  Note: this is not
 	  needed by *pick*
 	+ **SI_PRO**: path to the *Stock Investor Pro* installation.  This is the directory containing the
-	  "Professional" subdirectory.  Note: this is only needed by *dbload*
+	  "Professional" subdirectory.  Note: this is only needed by *dbload* and *pick*.
 
 3. Create the RunRadisJM DB using *dbinit*.
 
@@ -425,20 +425,3 @@ as specified in the table below:
 ## Contributing
 
 Still under construction...
-
-## Revision History
-
-+ 1.1.01
-
-  Fixed a bug that occurs if a text field in a new period has a *smaller* record
-  size than what is currently in the RunRadisJM DB.
-
-  Modified *dbinit* to truncate the *radisid.map* file.
-
-+ 1.1
-
-  Added the "pick" program
-
-+ 1.0
-
-  Initial release
