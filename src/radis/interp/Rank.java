@@ -42,9 +42,9 @@ public abstract class Rank extends ExecContainer {
 	private NumBufData tiedRank;
 
 	/**
-	 * Data for the "% tied rank" variable.
+	 * Data for the "tied rank %" variable.
 	 */
-	private NumBufData pctTiedRank;
+	private NumBufData tiedRankPct;
 
 	/**
 	 * Constructs the object.
@@ -55,7 +55,7 @@ public abstract class Rank extends ExecContainer {
 		super(exec);
 		this.rank = new NumBufData(exec);
 		this.tiedRank = new NumBufData(exec);
-		this.pctTiedRank = new NumBufData(exec);
+		this.tiedRankPct = new NumBufData(exec);
 	}
 
 	/**
@@ -102,13 +102,13 @@ public abstract class Rank extends ExecContainer {
 			}
 
 			float v = tiedRank.get(recnum);
-			pctTiedRank.put(recnum, (v * 100) / maxTiedRank);
+			tiedRankPct.put(recnum, (v * 100) / maxTiedRank);
 		}
 
 		// store the data in the variables
 		exec.addVar(Util.RANK_VAR_NM, rank);
 		exec.addVar(Util.TIED_RANK_VAR_NM, tiedRank);
-		exec.addVar(Util.PERCENT_TIED_RANK_VAR_NM, pctTiedRank);
+		exec.addVar(Util.PERCENT_TIED_RANK_VAR_NM, tiedRankPct);
 	}
 
 	/**
