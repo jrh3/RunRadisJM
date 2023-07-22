@@ -4,4 +4,13 @@ Release 1.1.2	07/17/2023
 - Added instructions for compiling
 
 Release 1.1.1	06/2023
-- Added "radis.pick", which lists tickers currently passing a screen
+- Fixed a bug that occurs if a text field in a new period has a *smaller* record
+  size than what is currently in the RunRadisJM DB.
+
+- Modified *dbinit* to truncate the *radisid.map* file.
+
+Release 1.1
+- Added the "pick" program
+
+Release 1.0
+- Initial release
