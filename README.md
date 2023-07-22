@@ -148,7 +148,7 @@ Example:
 
 			Print [SI Ticker], " ", [SI Price]
 
-+ Supports the following fields: "rank", "tied rank", and "% tied rank".
++ Supports the following fields: "rank", "tied rank", and "tied rank %".
 
 + Supports the following functions: *average*, *median*.  In addition, it supports: *min* and
   *max*, though they only accept two arguments.  Also supports: *sign* and *abs*.
