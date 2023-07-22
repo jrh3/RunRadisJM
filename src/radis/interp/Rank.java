@@ -42,7 +42,7 @@ public abstract class Rank extends ExecContainer {
 	private NumBufData tiedRank;
 
 	/**
-	 * Data for the "% tied rank" variable.
+	 * Data for the "tied rank %" variable.
 	 */
 	private NumBufData pctTiedRank;
 
