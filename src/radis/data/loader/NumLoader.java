@@ -37,7 +37,7 @@ public class NumLoader extends DataLoader<FloatBuffer> {
 	}
 
 	@Override
-	protected void zap(int nrecords) {
+	public void zap(int nrecords) {
 		for (int x = 0; x < nrecords; ++x) {
 			buf.put(Num.INVALID_VALUE);
 		}

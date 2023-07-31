@@ -298,27 +298,7 @@ public class LoaderContext extends Context {
 		var buf = ByteBuffer.allocate(maxrecs * recsz);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 
-		DataLoader<?> loader;
-		switch (pdef.getType()) {
-		case TEXT:
-			loader = new TextLoader(buf, recsz);
-			break;
-
-		case FLOAT:
-			loader = new NumLoader(buf);
-			break;
-
-		case DATE:
-			loader = new DateLoader(buf);
-			break;
-
-		case LOGICAL:
-			loader = new BoolLoader(buf);
-			break;
-
-		default:
-			throw new CorruptDbException("invalid type " + pdef.getType() + " for " + longnm);
-		}
+		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
 
 		// load the data into the buffer
 		loader.loadFieldData(dbf, compdef, def, begrec, begrec + maxrecs, sipro2recnum);
@@ -327,6 +307,67 @@ public class LoaderContext extends Context {
 		saveFieldData(filenm, recsz, begrec, buf);
 
 		return buf;
+	}
+
+	/**
+	 * Zaps records, in a radis mmap file, associated with fields that no longer
+	 * appear within the SI Pro DB.
+	 *
+	 * @param longnm long field name
+	 * @throws IOException
+	 */
+	public void zapOldFields(String longnm) throws IOException {
+		FieldDef pdef = getFieldDef(longnm);
+		if (pdef == null) {
+			// we have no definition for this field - discard it
+			return;
+		}
+
+		var begrec = beginRecord();
+		var maxrecs = numRecords() - begrec;
+		var recsz = pdef.recSize();
+		var filenm = getDir() + "/" + pdef.getFileName();
+
+		// data will be loaded into this buffer
+		var buf = ByteBuffer.allocate(maxrecs * recsz);
+		buf.order(ByteOrder.LITTLE_ENDIAN);
+
+		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
+
+		// zap all of the records
+		buf.rewind();
+		loader.zap(maxrecs);
+
+		// now save it to the radis DB
+		saveFieldData(filenm, recsz, begrec, buf);
+	}
+
+	/**
+	 * Makes a load, of the appropriate type, for the field.
+	 *
+	 * @param longnm long field name
+	 * @param pdef   field definition
+	 * @param recsz  record size
+	 * @param buf    buffer which the loader should populate
+	 * @return a new loader
+	 */
+	private DataLoader<?> makeLoader(String longnm, FieldDef pdef, int recsz, ByteBuffer buf) {
+		switch (pdef.getType()) {
+		case TEXT:
+			return new TextLoader(buf, recsz);
+
+		case FLOAT:
+			return new NumLoader(buf);
+
+		case DATE:
+			return new DateLoader(buf);
+
+		case LOGICAL:
+			return new BoolLoader(buf);
+
+		default:
+			throw new CorruptDbException("invalid type " + pdef.getType() + " for " + longnm);
+		}
 	}
 
 	/**

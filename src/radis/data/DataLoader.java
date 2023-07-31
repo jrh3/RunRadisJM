@@ -101,7 +101,7 @@ public abstract class DataLoader<T extends Buffer> {
 	 *
 	 * @param nrecords number of records to zap
 	 */
-	protected abstract void zap(int nrecords);
+	public abstract void zap(int nrecords);
 
 	/**
 	 * Puts the given data into the specified record of the wrapped buffer.

@@ -30,9 +30,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 import radis.Util;
 import radis.context.LoaderContext;
 import radis.data.buffer.RadisIdData;
+import radis.datadef.FieldDef;
 import radis.datadef.SiProIdent;
 import radis.exception.CorruptDbException;
 import radis.exception.FieldNotFoundException;
@@ -152,6 +155,11 @@ public class SiProInstallation {
 
 		Map<String, DdField> long2dd = loadDd(ctx);
 
+		// identify all fields that no longer appear within the data dictionary
+		Set<String> deletedFields = new HashSet<>(
+				ctx.getFieldDefs().stream().map(FieldDef::getLongName).collect(Collectors.toSet()));
+		deletedFields.removeAll(long2dd.keySet());
+
 		Map<String, List<String>> file2long = reverseMap(long2dd);
 
 		loadCompanyMap(ctx);
@@ -161,6 +169,11 @@ public class SiProInstallation {
 		// now load the data from the files found in the two data directories
 		loadData2(ctx, file2long, long2dd, findFileName("dbfs"));
 		loadData2(ctx, file2long, long2dd, findFileName("static"));
+
+		// add empty records for those fields that no longer exist
+		for (var longnm : deletedFields) {
+			ctx.zapOldFields(longnm);
+		}
 	}
 
 	/**
@@ -512,7 +525,8 @@ public class SiProInstallation {
 	 * @param ctx
 	 * @param file2long maps an SI Pro DBF file name to a list of the long field
 	 *                  names that it contains
-	 * @param long2dd   maps a long field name to its data definition
+	 * @param long2dd   maps a long field name to its data definition. Items are
+	 *                  removed from here as they're processed
 	 * @param dirName   directory whose DBF files are to be loaded
 	 * @throws IOException
 	 */
@@ -553,6 +567,9 @@ public class SiProInstallation {
 				// load each field this file contains
 				for (var longnm : longNames) {
 					var dd = long2dd.get(longnm);
+					if (dd == null) {
+						continue;
+					}
 
 					loadField(ctx, dbf, longnm, dd.getShortName(), fkey, key2recs);
 
