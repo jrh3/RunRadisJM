@@ -290,18 +290,18 @@ public class LoaderContext extends Context {
 
 		FieldDef pdef = getFieldDef(longnm);
 		var begrec = beginRecord();
-		var maxrecs = numRecords() - begrec;
+		var numNew = numRecords() - begrec;
 		var recsz = pdef.recSize();
 		var filenm = getDir() + "/" + pdef.getFileName();
 
 		// data will be loaded into this buffer
-		var buf = ByteBuffer.allocate(maxrecs * recsz);
+		var buf = ByteBuffer.allocate(numNew * recsz);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 
 		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
 
 		// load the data into the buffer
-		loader.loadFieldData(dbf, compdef, def, begrec, begrec + maxrecs, sipro2recnum);
+		loader.loadFieldData(dbf, compdef, def, begrec, begrec + numNew, sipro2recnum);
 
 		// now save it to the radis DB
 		saveFieldData(filenm, recsz, begrec, buf);
@@ -319,19 +319,19 @@ public class LoaderContext extends Context {
 	public void zapOldFields(String longnm) throws IOException {
 		FieldDef pdef = getFieldDef(longnm);
 		var begrec = beginRecord();
-		var maxrecs = numRecords() - begrec;
+		var numNew = numRecords() - begrec;
 		var recsz = pdef.recSize();
 		var filenm = getDir() + "/" + pdef.getFileName();
 
 		// data will be loaded into this buffer
-		var buf = ByteBuffer.allocate(maxrecs * recsz);
+		var buf = ByteBuffer.allocate(numNew * recsz);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 
 		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
 
 		// zap all of the records
 		buf.rewind();
-		loader.zap(maxrecs);
+		loader.zap(numNew);
 
 		// now save it to the radis DB
 		saveFieldData(filenm, recsz, begrec, buf);
@@ -346,20 +346,19 @@ public class LoaderContext extends Context {
 	 */
 	public void zapNewFields(String longnm) throws IOException {
 		FieldDef pdef = getFieldDef(longnm);
-
-		var nrecords = beginRecord();
+		var numOld = beginRecord();
 		var recsz = pdef.recSize();
 		var filenm = getDir() + "/" + pdef.getFileName();
 
 		// data will be loaded into this buffer
-		var buf = ByteBuffer.allocate(nrecords * recsz);
+		var buf = ByteBuffer.allocate(numOld * recsz);
 		buf.order(ByteOrder.LITTLE_ENDIAN);
 
 		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
 
 		// zap all of the records
 		buf.rewind();
-		loader.zap(nrecords);
+		loader.zap(numOld);
 
 		// now save it to the radis DB
 		saveFieldData(filenm, recsz, 0, buf);
