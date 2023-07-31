@@ -301,7 +301,7 @@ public class LoaderContext extends Context {
 		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
 
 		// load the data into the buffer
-		loader.loadFieldData(dbf, compdef, def, begrec, begrec + numNew, sipro2recnum);
+		loader.loadFieldData(dbf, compdef, def, numNew, sipro2recnum);
 
 		// now save it to the radis DB
 		saveFieldData(filenm, recsz, begrec, buf);

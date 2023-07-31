@@ -63,17 +63,16 @@ public abstract class DataLoader<T extends Buffer> {
 	 *                     industry or sector code) from the DBF record
 	 * @param def          descriptor to be used to extract the field's data from
 	 *                     the DBF record
-	 * @param begrec       beginning record number for the period
-	 * @param endrec       end record number (plus one) for the period
+	 * @param nrecords     number of records in the period the period
 	 * @param sipro2recnum map from the SI Pro company ID to the relevant mmap
 	 *                     record numbers, relative to "begrec"
 	 */
-	public void loadFieldData(Dbf dbf, FieldDescriptor compdef, FieldDescriptor def, int begrec, int endrec,
+	public void loadFieldData(Dbf dbf, FieldDescriptor compdef, FieldDescriptor def, int nrecords,
 			Map<String, List<Integer>> sipro2recnum) {
 
 		// zap all of the records
 		buf.rewind();
-		zap(endrec - begrec);
+		zap(nrecords);
 
 		// now load the field's data from the DBF file
 		buf.rewind();
