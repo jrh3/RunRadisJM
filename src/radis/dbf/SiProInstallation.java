@@ -152,13 +152,25 @@ public class SiProInstallation {
 	 * @throws IOException
 	 */
 	public void loadData(LoaderContext ctx, float perdt) throws IOException {
+		/*
+		 * identify fields that already exist within the radis DB
+		 *
+		 * Note: must do this BEFORE calling loadDd() as loadDd() adds fields to the
+		 * context.
+		 */
+		Set<String> existingFields = new HashSet<>(
+				ctx.getFieldDefs().stream().map(FieldDef::getLongName).collect(Collectors.toSet()));
 
+		// load the data dictionary for the SI Pro DB
 		Map<String, DdField> long2dd = loadDd(ctx);
 
 		// identify all fields that no longer appear within the data dictionary
-		Set<String> deletedFields = new HashSet<>(
-				ctx.getFieldDefs().stream().map(FieldDef::getLongName).collect(Collectors.toSet()));
+		Set<String> deletedFields = new HashSet<>(existingFields);
 		deletedFields.removeAll(long2dd.keySet());
+
+		// identify new fields
+		Set<String> newFields = new HashSet<>(long2dd.keySet());
+		newFields.removeAll(existingFields);
 
 		Map<String, List<String>> file2long = reverseMap(long2dd);
 
@@ -166,14 +178,19 @@ public class SiProInstallation {
 
 		ctx.addPeriod(perdt, compid2recnum.size());
 
-		// now load the data from the files found in the two data directories
-		loadData2(ctx, file2long, long2dd, findFileName("dbfs"));
-		loadData2(ctx, file2long, long2dd, findFileName("static"));
-
 		// add empty records for those fields that no longer exist
 		for (var longnm : deletedFields) {
 			ctx.zapOldFields(longnm);
 		}
+
+		// add empty records for prior periods of new fields
+		for (var longnm: newFields) {
+			ctx.zapNewFields(longnm);
+		}
+
+		// now load the data from the files found in the two data directories
+		loadData2(ctx, file2long, long2dd, findFileName("dbfs"));
+		loadData2(ctx, file2long, long2dd, findFileName("static"));
 	}
 
 	/**

@@ -343,6 +343,34 @@ public class LoaderContext extends Context {
 	}
 
 	/**
+	 * Zaps records, in a radis mmap file, associated with fields that are new,
+	 * zapping all records associated with prior periods.
+	 *
+	 * @param longnm long field name
+	 * @throws IOException
+	 */
+	public void zapNewFields(String longnm) throws IOException {
+		FieldDef pdef = getFieldDef(longnm);
+
+		var nrecords = beginRecord();
+		var recsz = pdef.recSize();
+		var filenm = getDir() + "/" + pdef.getFileName();
+
+		// data will be loaded into this buffer
+		var buf = ByteBuffer.allocate(nrecords * recsz);
+		buf.order(ByteOrder.LITTLE_ENDIAN);
+
+		DataLoader<?> loader = makeLoader(longnm, pdef, recsz, buf);
+
+		// zap all of the records
+		buf.rewind();
+		loader.zap(nrecords);
+
+		// now save it to the radis DB
+		saveFieldData(filenm, recsz, 0, buf);
+	}
+
+	/**
 	 * Makes a load, of the appropriate type, for the field.
 	 *
 	 * @param longnm long field name
