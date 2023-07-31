@@ -158,8 +158,7 @@ public class SiProInstallation {
 		 * Note: must do this BEFORE calling loadDd() as loadDd() adds fields to the
 		 * context.
 		 */
-		Set<String> existingFields = new HashSet<>(
-				ctx.getFieldDefs().stream().map(FieldDef::getLongName).collect(Collectors.toSet()));
+		List<String> existingFields = ctx.getFieldDefs().stream().map(FieldDef::getLongName).toList();
 
 		// load the data dictionary for the SI Pro DB
 		Map<String, DdField> long2dd = loadDd(ctx);
@@ -184,7 +183,7 @@ public class SiProInstallation {
 		}
 
 		// add empty records for prior periods of new fields
-		for (var longnm: newFields) {
+		for (var longnm : newFields) {
 			ctx.zapNewFields(longnm);
 		}
 
