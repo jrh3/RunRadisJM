@@ -2,8 +2,9 @@
 Release 1.1.3	07/31/2023
 - Fixed bugs in the DB loader:
 	- The loader wasn't adding empty records for past periods associated with
-	  new fields
-	- The loader wasn't adding empty records at the end of deleted fields
+	  new fields.
+	- The loader wasn't adding empty records at the end of deleted fields.
+- This change requires the DB to be rebuilt.
 
 Release 1.1.2	07/17/2023
 - Added "MOD()" function
