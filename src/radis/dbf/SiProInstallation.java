@@ -163,14 +163,6 @@ public class SiProInstallation {
 		// load the data dictionary for the SI Pro DB
 		Map<String, DdField> long2dd = loadDd(ctx);
 
-		// identify all fields that no longer appear within the data dictionary
-		Set<String> deletedFields = new HashSet<>(existingFields);
-		deletedFields.removeAll(long2dd.keySet());
-
-		// identify new fields
-		Set<String> newFields = new HashSet<>(long2dd.keySet());
-		newFields.removeAll(existingFields);
-
 		Map<String, List<String>> file2long = reverseMap(long2dd);
 
 		loadCompanyMap(ctx);
@@ -178,11 +170,17 @@ public class SiProInstallation {
 		ctx.addPeriod(perdt, compid2recnum.size());
 
 		// add empty records for those fields that no longer exist
+		Set<String> deletedFields = new HashSet<>(existingFields);
+		deletedFields.removeAll(long2dd.keySet());
+
 		for (var longnm : deletedFields) {
 			ctx.zapOldFields(longnm);
 		}
 
 		// add empty records for prior periods of new fields
+		Set<String> newFields = new HashSet<>(long2dd.keySet());
+		newFields.removeAll(existingFields);
+
 		for (var longnm : newFields) {
 			ctx.zapNewFields(longnm);
 		}
