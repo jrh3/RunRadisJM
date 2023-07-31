@@ -318,11 +318,6 @@ public class LoaderContext extends Context {
 	 */
 	public void zapOldFields(String longnm) throws IOException {
 		FieldDef pdef = getFieldDef(longnm);
-		if (pdef == null) {
-			// we have no definition for this field - discard it
-			return;
-		}
-
 		var begrec = beginRecord();
 		var maxrecs = numRecords() - begrec;
 		var recsz = pdef.recSize();
