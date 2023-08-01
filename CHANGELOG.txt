@@ -1,5 +1,5 @@
 
-Release 1.1.3	07/31/2023
+Release 1.1.3	08/01/2023
 - Fixed bugs in the DB loader:
 	- The loader wasn't adding empty records for past periods associated with
 	  new fields.
