@@ -35,7 +35,7 @@ public class BoolLoader extends DataLoader<ByteBuffer> {
 	}
 
 	@Override
-	protected void zap(int nrecords) {
+	public void zap(int nrecords) {
 		for (int x = 0; x < nrecords; ++x) {
 			buf.put(Bool.INVALID_VALUE);
 		}
